@@ -71,8 +71,10 @@ Both accept a local clone instead of the GitHub form (`claude plugin marketplace
 **Updates.** A new plugin version is a commit on this repository (the version in both
 manifests and the marketplace is bumped, and the commit is tagged). An installed plugin
 picks it up with `claude plugin marketplace update veriara` followed by
-`claude plugin update veriara@veriara`, or `codex plugin marketplace update veriara` and
-`codex plugin update veriara`; the next session runs the new version.
+`claude plugin update veriara@veriara`. Codex refreshes its marketplace snapshot with
+`codex plugin marketplace upgrade` and has no per-plugin update command: run
+`codex plugin remove veriara` and `codex plugin add veriara` to move to the new version.
+The next session runs it.
 
 An installed plugin replaces a manual `claude mcp add veriara` / `codex mcp add veriara`
 registration; remove that first, or the client sees two servers with the same name.
