@@ -33,12 +33,12 @@ filters are applied before the SQL runs. The plugin cannot widen what the seat a
 
 - **A Veriara seat** in your organization, and the **Veriara app** installed, running and
   connected on the machine that holds the databases (usually the organization's own).
-- **An MCP token for your seat.** It is issued by the Veriara seat administration API:
-  your own panel session may issue one for your own seat, and an administrator may issue
-  one for any seat of the organization (`POST /v1/admin/claims` with
-  `{"employeeId": "<your seat>", "purpose": "mcp"}`; a button in the seat panel is
-  planned). It is a personal credential that lives for days, not minutes; keep it as you
-  would a password. Closing or deactivating the seat ends it immediately.
+- **An MCP token for your seat.** Your organization's owner issues it from the Veriara
+  seat panel (Members, the **MCP token** action on your row) and hands it to you; the
+  same thing is available as an API call (`POST /v1/admin/claims` with
+  `{"employeeId": "<your seat>", "purpose": "mcp"}`). It is a personal credential that
+  lives for days, not minutes; keep it as you would a password. Closing or deactivating
+  the seat ends it immediately.
 
 ## Install
 
@@ -105,7 +105,7 @@ bearer_token_env_var = "VERIARA_MCP_TOKEN"
 | Answer | Meaning |
 |---|---|
 | `mcp_token_required` (401) | no token reached the server; check the environment variable and open a new shell |
-| `claim_expired`, `seat_closed` (401) | the token has expired or the seat is gone; issue a new token from the seat panel |
+| `claim_expired`, `seat_closed` (401) | the token has expired or the seat is gone; ask the owner for a new token from the seat panel |
 | `employee_inactive` (403) | the seat is deactivated; talk to your administrator |
 | `claim_wrong_purpose` (401) | a chat session claim was used instead of an MCP token |
 | `tool_unavailable`, a policy refusal | the seat cannot do this; the model should say so and stop |
