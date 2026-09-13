@@ -26,8 +26,10 @@ Fifteen tools, filtered to what your seat may use:
 | `fs_write`, `fs_append`, `fs_edit`, `fs_delete` | change files in the workspace folders |
 | `xlsx_write`, `docx_write` | produce an Excel or Word file from rows or Markdown |
 
-A table your seat may not read is refused, masked columns come back masked, and row
-filters are applied before the SQL runs. The plugin cannot widen what the seat allows.
+Where the organization administers seats and the deployment enforces it on this route, a
+table the seat may not read is refused, masked columns come back masked, and row filters
+are applied before the SQL runs. During the development phase the key runs with no seat
+policy: every registered database and folder, as the Veriara app itself sees them.
 
 ## Prerequisites
 
@@ -107,7 +109,7 @@ bearer_token_env_var = "VERIARA_API_KEY"
 |---|---|
 | `credential_required` (401) | nothing reached the server; check the environment variable and open a new shell |
 | `tooling_disabled` with reason `discover_failed` | the key is not registered, or the Veriara app is not running or not signed in |
-| `role_required` (403) | the organization administers seats and has no default role; ask the owner to set one, or use a per-seat MCP token |
+| `role_required` (403) | only on a deployment that enforces seat policy on this route (`MCP_SEAT_POLICY=1`): the organization has no default role; ask the owner to set one, or use a per-seat MCP token |
 | `claim_expired`, `seat_closed`, `employee_inactive` | a per-seat MCP token that has expired or whose seat is gone; ask the owner for a new one |
 | `tool_unavailable`, a policy refusal | the seat cannot do this; the model should say so and stop |
 | "Veriara client is not connected to the gateway" | the Veriara app is not running or not signed in |
