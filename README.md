@@ -33,10 +33,12 @@ filters are applied before the SQL runs. The plugin cannot widen what the seat a
 
 - **A Veriara seat** in your organization, and the **Veriara app** installed, running and
   connected on the machine that holds the databases (usually the organization's own).
-- **An MCP token for your seat.** Issue it from the Veriara seat panel (your own account,
-  or ask your organization's administrator). It is a personal credential that lives for
-  days, not minutes; keep it as you would a password. Closing or deactivating the seat
-  ends it immediately.
+- **An MCP token for your seat.** It is issued by the Veriara seat administration API:
+  your own panel session may issue one for your own seat, and an administrator may issue
+  one for any seat of the organization (`POST /v1/admin/claims` with
+  `{"employeeId": "<your seat>", "purpose": "mcp"}`; a button in the seat panel is
+  planned). It is a personal credential that lives for days, not minutes; keep it as you
+  would a password. Closing or deactivating the seat ends it immediately.
 
 ## Install
 
@@ -65,6 +67,12 @@ codex plugin list           # the veriara row should read "enabled"
 
 Both accept a local clone instead of the GitHub form (`claude plugin marketplace add
 <repo-dir>`, `codex plugin marketplace add <repo-dir>`).
+
+**Updates.** A new plugin version is a commit on this repository (the version in both
+manifests and the marketplace is bumped, and the commit is tagged). An installed plugin
+picks it up with `claude plugin marketplace update veriara` followed by
+`claude plugin update veriara@veriara`, or `codex plugin marketplace update veriara` and
+`codex plugin update veriara`; the next session runs the new version.
 
 An installed plugin replaces a manual `claude mcp add veriara` / `codex mcp add veriara`
 registration; remove that first, or the client sees two servers with the same name.
