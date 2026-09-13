@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "veriara",
+  "description": "Veriara plugins for Claude Code",
+  "owner": {
+    "name": "Veriara"
+  },
+  "plugins": [
+    {
+      "name": "veriara",
+      "description": "Query the databases and folders your Veriara seat can reach, through the Veriara agent API MCP endpoint.",
+      "version": "2.0.0",
+      "category": "database",
+      "source": "./plugins/veriara"
+    }
+  ]
+}

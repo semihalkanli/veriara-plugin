@@ -1,0 +1,20 @@
+{
+  "name": "veriara",
+  "interface": {
+    "displayName": "Veriara"
+  },
+  "plugins": [
+    {
+      "name": "veriara",
+      "source": {
+        "source": "local",
+        "path": "./plugins/veriara"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
