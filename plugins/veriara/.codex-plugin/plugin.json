@@ -1,7 +1,7 @@
 {
   "name": "veriara",
-  "version": "2.0.0",
-  "description": "Query the databases and folders your Veriara seat can reach: metric_run, report_run, schema_search, db_query, db_schema and the file and document tools, through the Veriara agent API. Needs VERIARA_MCP_TOKEN in the environment.",
+  "version": "2.1.0",
+  "description": "Query the databases and folders your Veriara seat can reach: metric_run, report_run, schema_search, db_query, db_schema and the file and document tools, through the Veriara agent API. Needs the organization's Veriara API key in VERIARA_API_KEY.",
   "author": {
     "name": "Veriara"
   },
@@ -13,7 +13,7 @@
     "veriara": {
       "type": "http",
       "url": "https://gw.veriara.com/v1/mcp",
-      "bearer_token_env_var": "VERIARA_MCP_TOKEN"
+      "bearer_token_env_var": "VERIARA_API_KEY"
     }
   },
   "interface": {

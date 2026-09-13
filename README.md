@@ -7,7 +7,7 @@ on your side instead of ours.
 
 ```
 Claude Code / Codex ── MCP over HTTPS ──> Veriara agent API ──> gateway ──> Veriara app
-                       (your MCP token)   (your seat's tools)               (your databases
+                       (your API key)     (the seat's tools)                (your databases
                                                                              and folders)
 ```
 
@@ -33,20 +33,21 @@ filters are applied before the SQL runs. The plugin cannot widen what the seat a
 
 - **A Veriara seat** in your organization, and the **Veriara app** installed, running and
   connected on the machine that holds the databases (usually the organization's own).
-- **An MCP token for your seat.** Your organization's owner issues it from the Veriara
-  seat panel (Members, the **MCP token** action on your row) and hands it to you; the
-  same thing is available as an API call (`POST /v1/admin/claims` with
-  `{"employeeId": "<your seat>", "purpose": "mcp"}`). It is a personal credential that
-  lives for days, not minutes; keep it as you would a password. Closing or deactivating
-  the seat ends it immediately.
+- **Your organization's Veriara API key** (`kgd_…`), the one the Veriara app signed in
+  with. A subscription is all the plugin needs. Keep the key as you would a password; it
+  is what the app itself authenticates with.
+
+  An organization that administers seats and wants a developer's calls to run under that
+  person's own role can hand them a per-seat MCP token instead (issued by the seat
+  administration API); it goes into the same variable.
 
 ## Install
 
-Export the token in the shell profile the CLI starts from (`~/.zshrc`, `~/.bashrc`, or the
+Export the key in the shell profile the CLI starts from (`~/.zshrc`, `~/.bashrc`, or the
 Windows user environment for a CLI launched from PowerShell), then open a new shell:
 
 ```sh
-export VERIARA_MCP_TOKEN=<your MCP token>
+export VERIARA_API_KEY=<your Veriara API key>
 ```
 
 Claude Code:
@@ -90,24 +91,24 @@ then `metric_run`, `report_run` or `db_query`.
 
 ```sh
 claude mcp add --transport http veriara https://gw.veriara.com/v1/mcp \
-  --header "Authorization: Bearer <your MCP token>"
+  --header "Authorization: Bearer <your Veriara API key>"
 ```
 
 ```toml
 # ~/.codex/config.toml
 [mcp_servers.veriara]
 url = "https://gw.veriara.com/v1/mcp"
-bearer_token_env_var = "VERIARA_MCP_TOKEN"
+bearer_token_env_var = "VERIARA_API_KEY"
 ```
 
 ## Errors you may see
 
 | Answer | Meaning |
 |---|---|
-| `mcp_token_required` (401) | no token reached the server; check the environment variable and open a new shell |
-| `claim_expired`, `seat_closed` (401) | the token has expired or the seat is gone; ask the owner for a new token from the seat panel |
-| `employee_inactive` (403) | the seat is deactivated; talk to your administrator |
-| `claim_wrong_purpose` (401) | a chat session claim was used instead of an MCP token |
+| `credential_required` (401) | nothing reached the server; check the environment variable and open a new shell |
+| `tooling_disabled` with reason `discover_failed` | the key is not registered, or the Veriara app is not running or not signed in |
+| `role_required` (403) | the organization administers seats and has no default role; ask the owner to set one, or use a per-seat MCP token |
+| `claim_expired`, `seat_closed`, `employee_inactive` | a per-seat MCP token that has expired or whose seat is gone; ask the owner for a new one |
 | `tool_unavailable`, a policy refusal | the seat cannot do this; the model should say so and stop |
 | "Veriara client is not connected to the gateway" | the Veriara app is not running or not signed in |
 

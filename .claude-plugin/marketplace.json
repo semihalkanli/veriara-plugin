@@ -9,7 +9,7 @@
     {
       "name": "veriara",
       "description": "Query the databases and folders your Veriara seat can reach, through the Veriara agent API MCP endpoint.",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "category": "database",
       "source": "./plugins/veriara"
     }

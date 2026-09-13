@@ -6,8 +6,8 @@ description: Use the Veriara MCP tools (metric_run, report_run, schema_search, d
 # Veriara
 
 The `veriara` MCP server is the Veriara agent API: the same tool layer the Veriara chat
-uses, reached with the seat's own MCP token. Every call runs under that seat's
-authorization. Tables the seat may not read are refused, masked columns come back masked,
+uses, reached with the organization's Veriara API key (or a per-seat MCP token). Every
+call runs under the organization's authorization. Tables the seat may not read are refused, masked columns come back masked,
 row filters are applied on the server, and every call is audited. Do not try to work
 around a refusal; report it.
 
@@ -47,7 +47,7 @@ available to this seat or this deployment; do not ask for it.
 - A failed call carries `error`, often a `code` and a `hint` naming the next action
   (a column lookup, a different tool, a smaller result). Follow the hint before retrying.
 - `tool_unavailable` or a policy refusal means the seat cannot do this; say so and stop.
-- Never ask the user for their token in the conversation. It is read from
-  `VERIARA_MCP_TOKEN` when the plugin starts. If the server answers
-  `claim_expired` or `seat_closed`, tell the user to issue a new MCP token from the
-  Veriara seat panel.
+- Never ask the user for their key in the conversation. It is read from
+  `VERIARA_API_KEY` when the plugin starts. If `tools/list` answers `tooling_disabled`
+  with reason `discover_failed`, the key is not registered or the Veriara app is not
+  running; tell the user to check both.
