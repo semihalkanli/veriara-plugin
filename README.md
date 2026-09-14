@@ -13,7 +13,10 @@ Claude Code / Codex ── MCP over HTTPS ──> Veriara agent API ──> gate
 
 ## What you get
 
-Fifteen tools, filtered to what your seat may use:
+With the organization's valid Veriara API key, the plugin user can do what the Veriara
+chat does, in the desktop app or on the web: the same fifteen tools, on every database
+and folder registered in the running Veriara app, with the model running on your side.
+The inventory is filtered to what the seat may use:
 
 | Tool | What it does |
 |---|---|
@@ -26,10 +29,12 @@ Fifteen tools, filtered to what your seat may use:
 | `fs_write`, `fs_append`, `fs_edit`, `fs_delete` | change files in the workspace folders |
 | `xlsx_write`, `docx_write` | produce an Excel or Word file from rows or Markdown |
 
-Where the organization administers seats and the deployment enforces it on this route, a
-table the seat may not read is refused, masked columns come back masked, and row filters
-are applied before the SQL runs. During the development phase the key runs with no seat
-policy: every registered database and folder, as the Veriara app itself sees them.
+During the development phase the key runs with no seat policy: every registered database
+and folder, as the Veriara app itself sees them, and a connection the app cannot reach
+fails here with the same driver error it shows in the app. Where the organization
+administers seats and the deployment enforces it on this route, a table the seat may not
+read is refused, masked columns come back masked, and row filters are applied before the
+SQL runs.
 
 ## Prerequisites
 
@@ -107,6 +112,7 @@ bearer_token_env_var = "VERIARA_API_KEY"
 
 | Answer | Meaning |
 |---|---|
+| `MCP endpoint not found at https://gw.veriara.com` in `claude mcp list`, or Codex logging `HTTP 404 ... Cannot POST /v1/mcp` | the endpoint is not served on that host yet; nothing to fix on your side, ask the Veriara team |
 | `credential_required` (401) | nothing reached the server; check the environment variable and open a new shell |
 | `tooling_disabled` with reason `discover_failed` | the key is not registered, or the Veriara app is not running or not signed in |
 | `role_required` (403) | only on a deployment that enforces seat policy on this route (`MCP_SEAT_POLICY=1`): the organization has no default role; ask the owner to set one, or use a per-seat MCP token |
