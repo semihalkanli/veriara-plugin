@@ -51,6 +51,16 @@ follows your role and your organization's knowledge pack without a plugin update
   Veriara app signed in with) works too, and runs with no role restrictions at all. It
   will stop being accepted before launch.
 
+## Browser sign-in (coming)
+
+The plan is to sign in without copying anything: after installing, Claude Code
+(`/mcp` → `veriara` → Authenticate) or Codex (`codex mcp login veriara`) opens the Veriara
+sign-in page in your browser, you sign in with your e-mail and password, the browser
+returns to the client's own "you can close this window" page, and the client keeps and
+refreshes the token itself. The Veriara agent API already points clients at the sign-in;
+the sign-in side is not open to MCP clients yet. It will ship as plugin 3.0, which drops
+the environment variable. Until then, use the steps below.
+
 ## Install
 
 Export the key in the shell profile the CLI starts from (`~/.zshrc`, `~/.bashrc`, or the
