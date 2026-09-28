@@ -28,8 +28,9 @@ below.
    they are what the business has agreed the number means.
 3. `db_query` for everything else. Read statements only; name every aggregate column; match
    the dialect to the connection's driver.
-4. Files: `doc_read` for office documents rather than `fs_read`; `xlsx_write` and
-   `docx_write` to produce Excel and Word files, never hand-assembled through `fs_write`.
+4. Files: `doc_read` for office documents rather than `fs_read`; `fs_write` with
+   `mode: "append"` to add to the end of a file; `xlsx_write` and `docx_write` to produce
+   Excel and Word files, never hand-assembled through `fs_write`.
 
 ## Rules
 

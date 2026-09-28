@@ -25,7 +25,7 @@ every database and folder their role reaches in the running Veriara app:
 | `report_run` | run a predefined report with `params` |
 | `db_query` | read-only SQL on a registered connection |
 | `fs_list`, `fs_read`, `fs_search`, `doc_read` | list, read and search the workspace folders; `doc_read` renders xlsx, docx, pdf and csv readably |
-| `fs_write`, `fs_append`, `fs_edit`, `fs_delete` | change files in the workspace folders |
+| `fs_write`, `fs_edit`, `fs_delete` | change files in the workspace folders; `fs_write` with `mode: "append"` adds to the end of a file |
 | `xlsx_write`, `docx_write` | produce an Excel or Word file from rows or Markdown |
 
 The inventory is filtered to what your role may use. A table the role may not read is
@@ -57,9 +57,10 @@ The plan is to sign in without copying anything: after installing, Claude Code
 (`/mcp` → `veriara` → Authenticate) or Codex (`codex mcp login veriara`) opens the Veriara
 sign-in page in your browser, you sign in with your e-mail and password, the browser
 returns to the client's own "you can close this window" page, and the client keeps and
-refreshes the token itself. The Veriara agent API already points clients at the sign-in;
-the sign-in side is not open to MCP clients yet. It will ship as plugin 3.0, which drops
-the environment variable. Until then, use the steps below.
+refreshes the token itself. The same URL, `https://gw.veriara.com/v1/mcp`, then also works
+without this plugin as a custom connector in claude.ai and ChatGPT. The Veriara agent API
+carries the sign-in already; it opens once the Veriara product has registered it. It will
+ship as plugin 3.0, which drops the environment variable. Until then, use the steps below.
 
 ## Install
 
