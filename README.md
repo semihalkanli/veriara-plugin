@@ -1,25 +1,24 @@
 # Veriara plugin for Claude Code and Codex
 
 Ask Claude Code or Codex questions about your own business data. The plugin registers the
-`veriara` MCP server, which is the Veriara agent API: the same tools, seat authorization,
+`veriara` MCP server, which is the Veriara agent API: the same tools, role authorization,
 column masking, row filters and audit trail the Veriara chat uses, with the model running
-on your side instead of ours.
+on your own Claude or Codex subscription instead of ours.
 
 ```
 Claude Code / Codex ── MCP over HTTPS ──> Veriara agent API ──> gateway ──> Veriara app
-                       (your API key)     (the seat's tools)                (your databases
+                       (your token)       (your role's tools)               (your databases
                                                                              and folders)
 ```
 
 ## What you get
 
-With the organization's valid Veriara API key, the plugin user can do what the Veriara
-chat does, in the desktop app or on the web: the same fifteen tools, on every database
-and folder registered in the running Veriara app, with the model running on your side.
-The inventory is filtered to what the seat may use:
+The plugin user can do what the Veriara chat does, in the desktop app or on the web, on
+every database and folder their role reaches in the running Veriara app:
 
 | Tool | What it does |
 |---|---|
+| `veriara_guide` | the working guide for you: your role and its limits, business metrics, reports, table inventory, SQL rules. The model calls it first |
 | `schema_search` | search the knowledge pack: tables, columns, enum codes, metric definitions |
 | `db_schema` | the table and column reference of one connection |
 | `metric_run` | run a defined business metric with optional `where` and `group_by` |
@@ -29,24 +28,39 @@ The inventory is filtered to what the seat may use:
 | `fs_write`, `fs_edit`, `fs_delete` | change files in the workspace folders; `fs_write` with `mode: "append"` adds to the end of a file |
 | `xlsx_write`, `docx_write` | produce an Excel or Word file from rows or Markdown |
 
-During the development phase the key runs with no seat policy: every registered database
-and folder, as the Veriara app itself sees them, and a connection the app cannot reach
-fails here with the same driver error it shows in the app. Where the organization
-administers seats and the deployment enforces it on this route, a table the seat may not
-read is refused, masked columns come back masked, and row filters are applied before the
-SQL runs.
+The inventory is filtered to what your role may use. A table the role may not read is
+refused, masked columns come back masked, and row filters are applied before the SQL runs.
+
+Claude Code also lists three ready-made starting points as slash commands:
+`/mcp__veriara__soru` (ask a business question), `/mcp__veriara__rapor` (run or list a
+catalog report) and `/mcp__veriara__yetkilerim` (what my role reaches).
+
+The guidance the model works under is served by Veriara, not stored in the plugin, so it
+follows your role and your organization's knowledge pack without a plugin update.
 
 ## Prerequisites
 
-- **A Veriara seat** in your organization, and the **Veriara app** installed, running and
-  connected on the machine that holds the databases (usually the organization's own).
-- **Your organization's Veriara API key** (`kgd_…`), the one the Veriara app signed in
-  with. A subscription is all the plugin needs. Keep the key as you would a password; it
-  is what the app itself authenticates with.
+- **A Veriara user** in your organization, with a role, and the **Veriara app** installed,
+  running and connected on the machine that holds the databases (usually the
+  organization's own).
+- **Your Veriara session token**, the one you get by signing in to Veriara. Calls then run
+  under your role and are audited under your name, as your chat turns are. Keep it as you
+  would a password.
 
-  An organization that administers seats and wants a developer's calls to run under that
-  person's own role can hand them a per-seat MCP token instead (issued by the seat
-  administration API); it goes into the same variable.
+  During the development phase the **organization's API key** (`kgd_…`, the one the
+  Veriara app signed in with) works too, and runs with no role restrictions at all. It
+  will stop being accepted before launch.
+
+## Browser sign-in (coming)
+
+The plan is to sign in without copying anything: after installing, Claude Code
+(`/mcp` → `veriara` → Authenticate) or Codex (`codex mcp login veriara`) opens the Veriara
+sign-in page in your browser, you sign in with your e-mail and password, the browser
+returns to the client's own "you can close this window" page, and the client keeps and
+refreshes the token itself. The same URL, `https://gw.veriara.com/v1/mcp`, then also works
+without this plugin as a custom connector in claude.ai and ChatGPT. The Veriara agent API
+carries the sign-in already; it opens once the Veriara product has registered it. It will
+ship as plugin 3.0, which drops the environment variable. Until then, use the steps below.
 
 ## Install
 
@@ -54,7 +68,7 @@ Export the key in the shell profile the CLI starts from (`~/.zshrc`, `~/.bashrc`
 Windows user environment for a CLI launched from PowerShell), then open a new shell:
 
 ```sh
-export VERIARA_API_KEY=<your Veriara API key>
+export VERIARA_API_KEY=<your Veriara session token>
 ```
 
 Claude Code:
@@ -91,14 +105,14 @@ registration; remove that first, or the client sees two servers with the same na
 
 Open a **new** session (registration does not affect a running one) and ask something
 your data can answer: "bu ayın satış cirosu ne kadar?", "en çok satan 10 ürünü listele",
-"stok raporunu Excel olarak kaydet". The model calls `schema_search` or `db_schema` first,
-then `metric_run`, `report_run` or `db_query`.
+"stok raporunu Excel olarak kaydet". The model calls `veriara_guide` first, then
+`schema_search` or `db_schema`, then `metric_run`, `report_run` or `db_query`.
 
 ## Manual registration (without the plugin)
 
 ```sh
 claude mcp add --transport http veriara https://gw.veriara.com/v1/mcp \
-  --header "Authorization: Bearer <your Veriara API key>"
+  --header "Authorization: Bearer <your Veriara session token>"
 ```
 
 ```toml
@@ -114,10 +128,13 @@ bearer_token_env_var = "VERIARA_API_KEY"
 |---|---|
 | `MCP endpoint not found at https://gw.veriara.com` in `claude mcp list`, or Codex logging `HTTP 404 ... Cannot POST /v1/mcp` | the endpoint is not served on that host yet; nothing to fix on your side, ask the Veriara team |
 | `credential_required` (401) | nothing reached the server; check the environment variable and open a new shell |
-| `tooling_disabled` with reason `discover_failed` | the key is not registered, or the Veriara app is not running or not signed in |
-| `role_required` (403) | only on a deployment that enforces seat policy on this route (`MCP_SEAT_POLICY=1`): the organization has no default role; ask the owner to set one, or use a per-seat MCP token |
-| `claim_expired`, `seat_closed`, `employee_inactive` | a per-seat MCP token that has expired or whose seat is gone; ask the owner for a new one |
-| `tool_unavailable`, a policy refusal | the seat cannot do this; the model should say so and stop |
+| `user_token_invalid` (401) | the session token is unknown or expired; sign in again and update the variable |
+| `user_token_required` (401) | the organization key is no longer accepted; use your session token |
+| `user_inactive` (403) | your Veriara access is closed; ask your administrator |
+| `role_required` (403) | you have no role yet; ask your administrator to assign one |
+| `identity_unavailable` (503) | Veriara could not confirm who you are right now; retry shortly |
+| `tooling_disabled` with reason `discover_failed` | the Veriara app is not running or not signed in, or the credential is not registered |
+| `tool_unavailable`, a policy refusal | your role cannot do this; the model should say so and stop |
 | "Veriara client is not connected to the gateway" | the Veriara app is not running or not signed in |
 
 ## Layout

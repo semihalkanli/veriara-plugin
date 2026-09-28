@@ -8,8 +8,8 @@
   "plugins": [
     {
       "name": "veriara",
-      "description": "Query the databases and folders your Veriara seat can reach, through the Veriara agent API MCP endpoint.",
-      "version": "2.1.0",
+      "description": "Query the databases and folders your Veriara role can reach, through the Veriara agent API MCP endpoint.",
+      "version": "2.2.0",
       "category": "database",
       "source": "./plugins/veriara"
     }
