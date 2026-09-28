@@ -26,7 +26,7 @@ The inventory is filtered to what the seat may use:
 | `report_run` | run a predefined report with `params` |
 | `db_query` | read-only SQL on a registered connection |
 | `fs_list`, `fs_read`, `fs_search`, `doc_read` | list, read and search the workspace folders; `doc_read` renders xlsx, docx, pdf and csv readably |
-| `fs_write`, `fs_append`, `fs_edit`, `fs_delete` | change files in the workspace folders |
+| `fs_write`, `fs_edit`, `fs_delete` | change files in the workspace folders; `fs_write` with `mode: "append"` adds to the end of a file |
 | `xlsx_write`, `docx_write` | produce an Excel or Word file from rows or Markdown |
 
 During the development phase the key runs with no seat policy: every registered database
