@@ -1,6 +1,6 @@
 ---
 name: veriara
-description: Use the Veriara MCP tools (metric_run, report_run, schema_search, db_query, db_schema, fs_list, fs_read, fs_search, doc_read, fs_write, fs_append, fs_edit, fs_delete, xlsx_write, docx_write) to answer questions from the databases and workspace folders the user's Veriara seat can reach. Use when the user mentions Veriara, their ERP (NETSIS, LOGO), "my database", "my sales", "my stock", or wants a business question answered or a report or document produced from their own data.
+description: Use the Veriara MCP tools (metric_run, report_run, schema_search, db_query, db_schema, fs_list, fs_read, fs_search, doc_read, fs_write, fs_edit, fs_delete, xlsx_write, docx_write) to answer questions from the databases and workspace folders the user's Veriara seat can reach. Use when the user mentions Veriara, their ERP (NETSIS, LOGO), "my database", "my sales", "my stock", or wants a business question answered or a report or document produced from their own data.
 ---
 
 # Veriara
@@ -34,8 +34,8 @@ available to this seat or this deployment; do not ask for it.
 4. **Files.** `fs_list` (`path=""` lists the workspace folders), `fs_read`, `fs_search`
    (searches inside Excel, Word, PDF and CSV too), `doc_read` (readable form of xlsx, docx,
    pdf, csv and text; call it without `part` first to get the file's map). Use `doc_read`
-   rather than `fs_read` for office documents. `fs_write`, `fs_append`, `fs_edit` and
-   `fs_delete` change files; `xlsx_write` and `docx_write` produce Excel and Word files
+   rather than `fs_read` for office documents. `fs_write` (with `mode: "append"` to add to
+   the end), `fs_edit` and `fs_delete` change files; `xlsx_write` and `docx_write` produce Excel and Word files
    from rows or Markdown. Use the writers when the user asks for a file; never assemble an
    office document by hand through `fs_write`.
 
