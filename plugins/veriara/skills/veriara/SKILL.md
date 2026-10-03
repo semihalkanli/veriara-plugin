@@ -38,7 +38,10 @@ below.
   "no records".
 - A truncated result carries a warning: narrow the query instead of paging.
 - A failed call's `hint` names the next action; follow it before retrying.
-- Never ask the user for their token in the conversation; it is read from
-  `VERIARA_API_KEY` when the plugin starts. If `tools/list` answers `tooling_disabled`
-  with reason `discover_failed`, the Veriara app is not running or the credential is not
-  registered; tell the user to check both.
+- Never ask the user for their token in the conversation. The client holds it: the
+  connector's sign-in in the Claude and ChatGPT apps, `VERIARA_API_KEY` in a terminal. If
+  the tools are missing or `tools/list` answers `tooling_disabled` with reason
+  `discover_failed`, the Veriara app is not running or the user is not signed in; tell the
+  user to check both.
+- Answer in the user's language, briefly: the number or the table first, then one line on
+  where it came from. Do not paste raw tool output or JSON.
