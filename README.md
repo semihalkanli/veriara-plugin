@@ -1,4 +1,4 @@
-# Veriara plugin for Claude Code and Codex
+# Veriara plugin for Claude and Codex
 
 Ask Claude Code or Codex questions about your own business data. The plugin registers the
 `veriara` MCP server, which is the Veriara agent API: the same tools, role authorization,
@@ -51,6 +51,29 @@ follows your role and your organization's knowledge pack without a plugin update
   Veriara app signed in with) works too, and runs with no role restrictions at all. It
   will stop being accepted before launch.
 
+## Claude and ChatGPT apps (desktop and web)
+
+The plugin is not limited to the terminal. The same endpoint serves the desktop apps and
+the web; there it signs you in through the browser instead of reading an environment
+variable, so it works once browser sign-in opens (below).
+
+- **Claude** (claude.ai, and the Chat, Cowork and Code tabs of the desktop app): Customize →
+  Plugins → Add marketplace → `semihalkanli/veriara-plugin`, then install `veriara`. The
+  install belongs to your account, so Claude Code sees it too. Open the plugin's
+  Connectors tab and connect `veriara` to sign in. Without the plugin, add
+  `https://gw.veriara.com/v1/mcp` under Settings → Connectors → Add custom connector. On a
+  Team or Enterprise plan an Owner adds the plugin (Organization settings → Plugins &
+  skills) and the connector (Organization settings → Connectors); you then connect with
+  your own sign-in.
+- **ChatGPT** (web and desktop): on a personal plan, turn on Developer mode (Settings →
+  Security and login) and create an app with `https://gw.veriara.com/v1/mcp`. On Business,
+  Enterprise or Edu a workspace admin publishes it for the workspace, and you use it
+  without Developer mode.
+
+In the chat a tool call shows as one short line with a Turkish label, "SQL sorgusu",
+"Rapor", "Excel dosyası", which expands to the details. Reads run without asking; every
+file change asks you first. The answer itself is the model's text.
+
 ## Browser sign-in (coming)
 
 The plan is to sign in without copying anything: after installing, Claude Code
@@ -60,9 +83,10 @@ returns to the client's own "you can close this window" page, and the client kee
 refreshes the token itself. The same URL, `https://gw.veriara.com/v1/mcp`, then also works
 without this plugin as a custom connector in claude.ai and ChatGPT. The Veriara agent API
 carries the sign-in already; it opens once the Veriara product has registered it. It will
-ship as plugin 3.0, which drops the environment variable. Until then, use the steps below.
+ship as plugin 3.0, which drops the environment variable. Until then, the terminal clients
+use the steps below.
 
-## Install
+## Install (terminal)
 
 Export the key in the shell profile the CLI starts from (`~/.zshrc`, `~/.bashrc`, or the
 Windows user environment for a CLI launched from PowerShell), then open a new shell:
