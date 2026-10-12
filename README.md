@@ -176,6 +176,7 @@ bearer_token_env_var = "VERIARA_API_KEY"
 .claude-plugin/marketplace.json     Claude Code marketplace
 .agents/plugins/marketplace.json    Codex marketplace
 plugins/veriara/                    the plugin: both manifests, the skill
+.github/check-manifests.mjs         CI check: the files parse, versions and server URLs agree
 ```
 
 The agent API itself is not in this repository.
