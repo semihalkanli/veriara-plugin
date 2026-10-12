@@ -70,6 +70,13 @@ for (const [header, value] of Object.entries(claudeServer?.headers ?? {})) {
   }
 }
 
+// Codex refuses to start a server whose bearer_token_env_var is unset and skips
+// `codex mcp login` for it, so a user who signed in by browser would get no
+// tools. env_http_headers leaves an unset variable's header out instead.
+if (codexServer && "bearer_token_env_var" in codexServer) {
+  errors.push("Codex manifest: bearer_token_env_var blocks browser sign-in; send the variable through env_http_headers");
+}
+
 const skill = join(pluginDir, "skills/veriara/SKILL.md");
 
 if (!existsSync(skill)) {

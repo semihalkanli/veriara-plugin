@@ -84,7 +84,8 @@ refreshes the token itself. The same URL, `https://gw.veriara.com/v1/mcp`, then 
 without this plugin as a custom connector in claude.ai and ChatGPT. The Veriara agent API
 carries the sign-in already; it opens once the Veriara product has registered it. It will
 ship as plugin 3.0, which drops the environment variable. Until then, the terminal clients
-use the steps below.
+use the steps below. Codex is ready for it since 2.3.2: `codex mcp login veriara` works with
+or without the variable, and when both are there the signed-in user is the one who runs.
 
 ## Install (terminal)
 
@@ -109,11 +110,26 @@ Codex:
 codex plugin marketplace add semihalkanli/veriara-plugin
 codex plugin add veriara@veriara
 codex plugin list           # the veriara row should read "installed, enabled"
-codex mcp get veriara       # url https://gw.veriara.com/v1/mcp, bearer_token_env_var VERIARA_API_KEY
+codex mcp get veriara       # url https://gw.veriara.com/v1/mcp, env_http_headers x-veriara-apikey=VERIARA_API_KEY
 ```
 
 Codex needs the `@veriara` marketplace suffix (or `--marketplace veriara`) on `plugin add`
 and `plugin remove`; a bare `veriara` is refused.
+
+**Codex without a terminal session (`codex exec`).** Reads run, but every file change
+(`fs_write`, `fs_edit`, `fs_append`, `fs_delete`, `xlsx_write`, `docx_write`) asks for
+approval, and `codex exec` never asks: the call fails with "MCP tool call requires
+approval, but approval policy is never". To let a script write, allow the tools it needs in
+`~/.codex/config.toml`, under the plugin's own section:
+
+```toml
+[plugins."veriara@veriara".mcp_servers.veriara.tools.fs_write]
+approval_mode = "approve"
+```
+
+Not under `[mcp_servers.veriara.tools.fs_write]`: that table declares a second, manual
+server with no URL, and Codex then refuses to load the whole config ("invalid transport in
+`mcp_servers.veriara`").
 
 Both accept a local clone instead of the GitHub form (`claude plugin marketplace add
 <repo-dir>`, `codex plugin marketplace add <repo-dir>`).
@@ -152,8 +168,11 @@ claude mcp add --transport http veriara https://gw.veriara.com/v1/mcp \
 # ~/.codex/config.toml
 [mcp_servers.veriara]
 url = "https://gw.veriara.com/v1/mcp"
-bearer_token_env_var = "VERIARA_API_KEY"
+env_http_headers = { "x-veriara-apikey" = "VERIARA_API_KEY" }
 ```
+
+Use `env_http_headers`, not `bearer_token_env_var`: with the latter Codex does not open its connection to the
+server at all while the variable is unset, and never offers browser sign-in.
 
 ## Errors you may see
 
@@ -161,6 +180,8 @@ bearer_token_env_var = "VERIARA_API_KEY"
 |---|---|
 | `MCP endpoint not found at https://gw.veriara.com` in `claude mcp list`, or Codex logging `HTTP 404 ... Cannot POST /v1/mcp` | the endpoint is not served on that host yet; nothing to fix on your side, ask the Veriara team |
 | `credential_required` (401), in Claude Code with "Kimlik bilgisi gerekli" | no key was sent: `VERIARA_API_KEY` is not set in the shell the CLI started from; set it and open a new shell |
+| Codex: `veriara` shows "Not logged in", or the log says `Auth required` | no credential reached the server: set `VERIARA_API_KEY` and open a new shell; `codex mcp login veriara` works only once the Veriara product has opened browser sign-in |
+| Codex: `Environment variable VERIARA_API_KEY for MCP server 'veriara' is not set` | plugin 2.3.1 or older with the variable unset; set it, or update the plugin |
 | `user_token_invalid` (401) | the session token is unknown or expired; sign in again and update the variable |
 | `user_token_required` (401) | the organization key is no longer accepted; use your session token |
 | `user_inactive` (403) | your Veriara access is closed; ask your administrator |

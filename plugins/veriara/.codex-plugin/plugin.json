@@ -1,6 +1,6 @@
 {
   "name": "veriara",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Query the databases and folders your Veriara role can reach: metric_run, report_run, schema_search, db_query, db_schema and the file and document tools, through the Veriara agent API. In a terminal it reads your Veriara session token (or, during the development phase, the organization's API key) from VERIARA_API_KEY.",
   "author": {
     "name": "Veriara"
@@ -13,7 +13,9 @@
     "veriara": {
       "type": "http",
       "url": "https://gw.veriara.com/v1/mcp",
-      "bearer_token_env_var": "VERIARA_API_KEY"
+      "env_http_headers": {
+        "x-veriara-apikey": "VERIARA_API_KEY"
+      }
     }
   },
   "interface": {
