@@ -1,6 +1,6 @@
 {
   "name": "veriara",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Query the databases and folders your Veriara role can reach: metric_run, report_run, schema_search, db_query, db_schema and the file and document tools, through the Veriara agent API. In a terminal it reads your Veriara session token (or, during the development phase, the organization's API key) from VERIARA_API_KEY. Browser sign-in, which the Claude apps need, arrives with plugin 3.0.",
   "author": {
     "name": "Veriara"
