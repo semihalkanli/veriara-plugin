@@ -160,13 +160,13 @@ bearer_token_env_var = "VERIARA_API_KEY"
 | Answer | Meaning |
 |---|---|
 | `MCP endpoint not found at https://gw.veriara.com` in `claude mcp list`, or Codex logging `HTTP 404 ... Cannot POST /v1/mcp` | the endpoint is not served on that host yet; nothing to fix on your side, ask the Veriara team |
-| `credential_required` (401) | nothing reached the server; check the environment variable and open a new shell |
+| `credential_required` (401), in Claude Code with "Kimlik bilgisi gerekli" | no key was sent: `VERIARA_API_KEY` is not set in the shell the CLI started from; set it and open a new shell |
 | `user_token_invalid` (401) | the session token is unknown or expired; sign in again and update the variable |
 | `user_token_required` (401) | the organization key is no longer accepted; use your session token |
 | `user_inactive` (403) | your Veriara access is closed; ask your administrator |
 | `role_required` (403) | you have no role yet; ask your administrator to assign one |
 | `identity_unavailable` (503) | Veriara could not confirm who you are right now; retry shortly |
-| `tooling_disabled` with reason `discover_failed` | the Veriara app is not running or not signed in, or the credential is not registered |
+| `tooling_disabled` with reason `discover_failed` | the Veriara app is not running or not signed in, or the credential is not registered. On plugin 2.3.0 or older in Claude Code it also means `VERIARA_API_KEY` is not set; update the plugin |
 | `tool_unavailable`, a policy refusal | your role cannot do this; the model should say so and stop |
 | "Veriara client is not connected to the gateway" | the Veriara app is not running or not signed in |
 
