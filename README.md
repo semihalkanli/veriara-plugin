@@ -107,23 +107,32 @@ Codex:
 
 ```sh
 codex plugin marketplace add semihalkanli/veriara-plugin
-codex plugin add veriara
-codex plugin list           # the veriara row should read "enabled"
+codex plugin add veriara@veriara
+codex plugin list           # the veriara row should read "installed, enabled"
+codex mcp get veriara       # url https://gw.veriara.com/v1/mcp, bearer_token_env_var VERIARA_API_KEY
 ```
+
+Codex needs the `@veriara` marketplace suffix (or `--marketplace veriara`) on `plugin add`
+and `plugin remove`; a bare `veriara` is refused.
 
 Both accept a local clone instead of the GitHub form (`claude plugin marketplace add
 <repo-dir>`, `codex plugin marketplace add <repo-dir>`).
 
-**Updates.** A new plugin version is a commit on this repository (the version in both
-manifests and the marketplace is bumped, and the commit is tagged). An installed plugin
-picks it up with `claude plugin marketplace update veriara` followed by
-`claude plugin update veriara@veriara`. Codex refreshes its marketplace snapshot with
-`codex plugin marketplace upgrade` and has no per-plugin update command: run
-`codex plugin remove veriara` and `codex plugin add veriara` to move to the new version.
-The next session runs it.
+**Updates.** A new plugin version is a commit on `main` (the version in both manifests and
+the marketplace is bumped, and the commit is tagged). A marketplace added without a ref
+follows `main`, so whatever is on `main` is what the next update installs; the tag only
+names it. To stay on one version, add the marketplace at its tag
+(`codex plugin marketplace add semihalkanli/veriara-plugin --ref <tag>`, a tag from this
+repository's tag list). An installed
+plugin picks up a new version with `claude plugin marketplace update veriara` followed by
+`claude plugin update veriara@veriara`. In Codex, `codex plugin marketplace upgrade`
+refreshes the marketplace and moves the installed plugin to the new version in the same
+step; `codex plugin list` then shows it. The next session runs it.
 
-An installed plugin replaces a manual `claude mcp add veriara` / `codex mcp add veriara`
-registration; remove that first, or the client sees two servers with the same name.
+Remove a manual `claude mcp add veriara` / `codex mcp add veriara` registration before
+installing the plugin. Claude Code would see two servers with the same name; Codex
+silently keeps the manual one and ignores the plugin's, so `codex mcp get veriara` would
+show the old address.
 
 ## First try
 
